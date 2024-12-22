@@ -34,9 +34,7 @@ def main():
     uploaded_file = st.file_uploader('Загрузите файл CSV c историческими данными', type='csv')
 
     api_key = st.text_input('Введите ваш OpenWeatherMap API Key:')
-    if not api_key:
-        st.warning('Введите API-ключ для получения текущей погоды')
-
+    
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
         city_selection = st.selectbox('Выберите город:', options=data['city'].unique())
@@ -66,18 +64,17 @@ def main():
         ax.set_ylabel('Температура')
         st.pyplot(fig)
 
-        if api_key:
-            curr_temp, err = get_current_temperature(city_selection, api_key)
-            if err is not None:
-                st.error(err)
-            elif curr_temp is not None:
-                st.write(f'Текущая температура в городе {city_selection}: {curr_temp}')
+        curr_temp, err = get_current_temperature(city_selection, api_key)
+        if err is not None:
+            st.error(err)
+        elif curr_temp is not None:
+            st.write(f'Текущая температура в городе {city_selection}: {curr_temp}')
 
-                anomalous, lower_bound, upper_bound = is_temperature_anomalous(city_data, curr_temp)
-                if anomalous:
-                    st.error(f'Температура {curr_temp} градусов по Цельсию является аномальной. Нормальный диапазон: {lower_bound:.2f} : {upper_bound:.2f}')
-                else:
-                    st.success(f'Температура {curr_temp} градусов по Цельсию является нормальной. Нормальный диапазон: {lower_bound:.2f} : {upper_bound:.2f}')
+            anomalous, lower_bound, upper_bound = is_temperature_anomalous(city_data, curr_temp)
+            if anomalous:
+                st.error(f'Температура {curr_temp} градусов по Цельсию является аномальной. Нормальный диапазон: {lower_bound:.2f} : {upper_bound:.2f}')
+            else:
+                st.success(f'Температура {curr_temp} градусов по Цельсию является нормальной. Нормальный диапазон: {lower_bound:.2f} : {upper_bound:.2f}')
 
 if __name__ == '__main__':
     main()
