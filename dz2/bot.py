@@ -7,7 +7,7 @@ from aiogram.fsm.state import State, StatesGroup
 import requests
 
 
-API_TOKEN = "7489339867:AAFxUowoQkWTG0gNQ-ebHmixpnr4KTQBY4c"
+API_TOKEN = ""
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
@@ -244,7 +244,7 @@ async def cmd_stats(message: Message):
 
 
 def get_city_temperature(city):
-    API_KEY = "b44b3fe6057829d2c1422f0d7b3f547b"
+    API_KEY = ""
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=ru"
     response = requests.get(url)
     if response.status_code == 200:
