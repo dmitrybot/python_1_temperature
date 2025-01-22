@@ -118,8 +118,10 @@ async def process_calorie_goal(message: Message, state: FSMContext):
     data = await state.get_data()
     user_id = message.from_user.id
 
-    water_goal = calculate_water_goal(data['weight'], data['activity'], data['city'], data['water_goal'])
-    calorie_goal = calculate_calorie_goal(data['weight'], data['height'], data['age'], data['calorie_goal'])
+    water_goal = calculate_water_goal(
+        data['weight'], data['activity'], data['city'], data['water_goal'])
+    calorie_goal = calculate_calorie_goal(
+        data['weight'], data['height'], data['age'], data['calorie_goal'])
 
     users[user_id] = {
         'weight': data['weight'],
@@ -165,7 +167,8 @@ async def cmd_log_water(message: Message):
     try:
         amount = int(message.text.split()[1])
         users[user_id]['logged_water'] += amount
-        remaining = users[user_id]['water_goal'] - users[user_id]['logged_water']
+        remaining = users[user_id]['water_goal'] - \
+            users[user_id]['logged_water']
         await message.reply(f"Записано: {amount} мл воды.\nОсталось: {remaining} мл до нормы.")
     except (IndexError, ValueError):
         await message.reply("Пожалуйста, используйте формат команды: /log_water <количество_в_мл>")
@@ -206,6 +209,7 @@ async def process_food_amount(message: Message, state: FSMContext):
     except ValueError:
         await message.reply("Пожалуйста, введите корректное количество в граммах.")
 
+
 @dp.message(Command("log_workout"))
 async def cmd_log_workout(message: Message):
     user_id = message.from_user.id
@@ -217,7 +221,8 @@ async def cmd_log_workout(message: Message):
         workout_type = parts[1]
         duration = int(parts[2])
 
-        users[user_id]['burned_calories'] += activity_varians.get(workout_type, 5) * duration
+        users[user_id]['burned_calories'] += activity_varians.get(
+            workout_type, 5) * duration
         await message.reply(f"Записано: тренировка '{workout_type}' длительностью {duration} мин. "
                             f"Сожжено калорий: {users[user_id]['burned_calories']:.1f} ккал.")
     except (IndexError, ValueError):
@@ -253,7 +258,8 @@ def get_city_temperature(city):
         return temperature
     else:
         return 0
-    
+
+
 def get_food_info(product_name):
     url = f"https://world.openfoodfacts.org/cgi/search.pl?action=process&search_terms={product_name}&json=true"
     response = requests.get(url)
@@ -267,12 +273,15 @@ def get_food_info(product_name):
                 'calories': first_product.get('nutriments', {}).get('energy-kcal_100g', 0)
             }
     return None
-    
+
+
 def check_user_has_profile(message, user_id):
     if user_id not in users:
-        message.reply("Пожалуйста, сначала настройте профиль командой /set_profile")
+        message.reply(
+            "Пожалуйста, сначала настройте профиль командой /set_profile")
         return False
     return True
+
 
 async def main():
     await dp.start_polling(bot)
