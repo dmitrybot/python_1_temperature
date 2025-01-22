@@ -28,7 +28,7 @@ def is_temperature_anomalous(city_data, temp):
 
 
 def main():
-    st.title('Приложение: Анализ Погоды')
+    st.title('Проект "Вакансии c портала HeadHunter"')
 
     st.subheader('Загрузите файл')
     uploaded_file = st.file_uploader('Загрузите файл CSV c историческими данными', type='csv')
